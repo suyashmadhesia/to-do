@@ -39,8 +39,8 @@ class TodoBlocBuilder extends StatelessWidget {
         } else if (state is NoTodoState) {
           return Center(
             child: Text(
-              'No todo please create one !!',
-              style: TextStyle(color: Colors.redAccent, fontSize: 14),
+              'Hurray ! no todo !!',
+              style: TextStyle(color: Colors.redAccent[100], fontSize: 14),
             ),
           );
         }

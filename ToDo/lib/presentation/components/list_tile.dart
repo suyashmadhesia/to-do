@@ -20,6 +20,9 @@ class _TileState extends State<Tile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      onLongPress: () {
+        widget.todoBloc.add(DeleteTodoEvent(widget.tid));
+      },
       tileColor: Colors.transparent,
       title: Text(
         widget.todoText,

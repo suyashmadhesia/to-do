@@ -32,6 +32,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       final data = await store.getTodo();
       yield ShowTodoState(data);
     } else if (event is DeleteTodoEvent) {
+      store.prefs.remove(event.tid);
+      yield LoadingTodoState();
+      await Future.delayed(Duration(seconds: 1));
+      this..add(FetchTodoEvent());
+    } else if (event is DeleteAllTodoEvent) {
       store.prefs.clear();
       yield LoadingTodoState();
       await Future.delayed(Duration(seconds: 1));

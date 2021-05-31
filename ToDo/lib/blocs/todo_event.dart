@@ -25,4 +25,9 @@ class MarkDoneTodoEvent extends TodoEvent {
 }
 
 // Implement deleting of todo from db
-class DeleteTodoEvent extends TodoEvent {}
+class DeleteTodoEvent extends TodoEvent {
+  final String tid;
+  DeleteTodoEvent(this.tid);
+}
+
+class DeleteAllTodoEvent extends TodoEvent {}

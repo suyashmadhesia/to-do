@@ -29,7 +29,7 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(right: 28.0),
             child: IconButton(
               onPressed: () {
-                todoBloc.add(DeleteTodoEvent());
+                todoBloc.add(DeleteAllTodoEvent());
               },
               icon: Icon(
                 Icons.delete,

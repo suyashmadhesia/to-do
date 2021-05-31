@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
       backgroundColor: Colors.grey[800],
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
-        child: BlocTodoBuilder(),
+        child: TodoBlocBuilder(),
       ),
     );
   }
@@ -125,6 +125,7 @@ class _HomePageState extends State<HomePage> {
                     ToDo todo = ToDo(todo: todoText, isCompleted: 0, tid: tid);
                     todoBloc.add(CreateTodoEvent(todo));
                     Navigator.of(context).pop();
+                    todoText = '';
                   } else {
                     SnackBar snackBar = SnackBar(
                       duration: Duration(milliseconds: 2500),

@@ -4,7 +4,7 @@ import 'package:ToDo/presentation/components/list_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class BlocTodoBuilder extends StatelessWidget {
+class TodoBlocBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TodoBloc todoBloc = BlocProvider.of<TodoBloc>(context);

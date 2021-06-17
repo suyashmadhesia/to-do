@@ -1,41 +1,33 @@
 import 'package:ToDo/blocs/todo_bloc.dart';
 import 'package:ToDo/blocs/todo_state.dart';
-import 'package:ToDo/presentation/components/list_tile.dart';
+
+import 'package:ToDo/presentation/views/todo_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class TodoBlocBuilder extends StatelessWidget {
+class TodoBlocBuilder extends StatefulWidget {
+  @override
+  _TodoBlocBuilderState createState() => _TodoBlocBuilderState();
+}
+
+class _TodoBlocBuilderState extends State<TodoBlocBuilder>
+    with TickerProviderStateMixin {
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // print(listAnimation.value);
+    // ignore: close_sinks
     final TodoBloc todoBloc = BlocProvider.of<TodoBloc>(context);
     return BlocBuilder<TodoBloc, TodoState>(
       builder: (context, state) {
         if (state is LoadingTodoState) {
           return Center(child: CircularProgressIndicator());
         } else if (state is ShowTodoState) {
-          //
-          return ListView.builder(
-            physics: BouncingScrollPhysics(),
-            itemCount: state.data.length,
-            itemBuilder: (BuildContext context, int index) {
-              String key = state.data.keys.elementAt(index);
-              debugPrint(key);
-              print(state.data);
-              bool isChecked;
-              if (state.data[key][1] == '0') {
-                isChecked = false;
-              } else {
-                isChecked = true;
-              }
-              // return Text(state.data[key][0]);
-              return Tile(
-                state.data[key][0],
-                isChecked,
-                todoBloc: todoBloc,
-                tid: key,
-              );
-            },
-          );
+          return TodoList(todoBloc, state);
         } else if (state is NoTodoState) {
           return Center(
             child: Text(

@@ -14,7 +14,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       if (store.prefs == null) {
         await store.init();
       }
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(Duration(milliseconds: 100));
       this..add(FetchTodoEvent());
     } else if (event is FetchTodoEvent) {
       final data = await store.getTodo();
@@ -34,12 +34,12 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     } else if (event is DeleteTodoEvent) {
       store.prefs.remove(event.tid);
       yield LoadingTodoState();
-      await Future.delayed(Duration(seconds: 1));
+      //await Future.delayed(Duration(seconds: 1));
       this..add(FetchTodoEvent());
     } else if (event is DeleteAllTodoEvent) {
       store.prefs.clear();
       yield LoadingTodoState();
-      await Future.delayed(Duration(seconds: 1));
+      //await Future.delayed(Duration(seconds: 1));
       this..add(FetchTodoEvent());
     } else {
       yield ErrorLoadingTodo();

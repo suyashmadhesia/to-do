@@ -51,7 +51,7 @@ class CustomTextField extends StatelessWidget {
       cursorColor: Colors.white,
       autofocus: false,
       style: TextStyle(
-          fontSize: 12, fontWeight: FontWeight.bold, color: Colors.white),
+          fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
       decoration: InputDecoration(
         prefixIcon: preffixWidget,
         filled: true,
@@ -75,10 +75,10 @@ class CustomTextField extends StatelessWidget {
         ),
         labelText: label,
         labelStyle: TextStyle(
-            fontSize: 13, fontWeight: FontWeight.normal, color: Colors.grey),
+            fontSize: 14, fontWeight: FontWeight.normal, color: Colors.grey),
         hintText: hintText,
         hintStyle: TextStyle(
-            fontSize: 13, fontWeight: FontWeight.normal, color: Colors.grey),
+            fontSize: 14, fontWeight: FontWeight.normal, color: Colors.grey),
       ),
     );
   }

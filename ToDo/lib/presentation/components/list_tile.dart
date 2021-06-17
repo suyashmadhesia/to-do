@@ -20,9 +20,6 @@ class _TileState extends State<Tile> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onLongPress: () {
-        widget.todoBloc.add(DeleteTodoEvent(widget.tid));
-      },
       tileColor: Colors.transparent,
       title: Text(
         widget.todoText,
@@ -31,22 +28,38 @@ class _TileState extends State<Tile> {
             color: widget.isCompleted ? Colors.grey : Colors.white,
             fontSize: 16),
       ),
-      trailing: Checkbox(
-        activeColor: Colors.amberAccent,
-        value: widget.isCompleted,
-        onChanged: (value) {
-          int x;
-          if (widget.isCompleted) {
-            x = 0;
-          } else {
-            x = 1;
-          }
-          ToDo todo =
-              ToDo(todo: widget.todoText, tid: widget.tid, isCompleted: x);
-          setState(() {
-            widget.todoBloc.add(MarkDoneTodoEvent(todo));
-          });
-        },
+      trailing: Wrap(
+        children: [
+          Checkbox(
+            focusColor: Colors.white,
+            hoverColor: Colors.white,
+            activeColor: Colors.amberAccent,
+            value: widget.isCompleted,
+            onChanged: (value) {
+              int x;
+              if (widget.isCompleted) {
+                x = 0;
+              } else {
+                x = 1;
+              }
+              ToDo todo =
+                  ToDo(todo: widget.todoText, tid: widget.tid, isCompleted: x);
+              setState(() {
+                widget.todoBloc.add(MarkDoneTodoEvent(todo));
+              });
+            },
+          ),
+          IconButton(
+            onPressed: () {
+              widget.todoBloc.add(DeleteTodoEvent(widget.tid));
+            },
+            icon: Icon(
+              Icons.delete,
+              color: Colors.redAccent,
+              size: 24,
+            ),
+          ),
+        ],
       ),
     );
   }

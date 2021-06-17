@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:ToDo/blocs/todo_bloc.dart';
 import 'package:ToDo/blocs/todo_event.dart';
+// import 'package:ToDo/blocs/todo_state.dart';
 import 'package:ToDo/data/models/todo.dart';
 import 'package:ToDo/presentation/components/add_button.dart';
 import 'package:ToDo/presentation/components/text_field.dart';
@@ -13,7 +16,39 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  Animation heading;
+  Animation button;
+  Animation refresh;
+  AnimationController refreshController;
+  AnimationController controller;
+
+  @override
+  void initState() {
+    controller =
+        AnimationController(vsync: this, duration: Duration(seconds: 3));
+    refreshController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+    heading = Tween(begin: 0.0, end: 46.0).animate(CurvedAnimation(
+        parent: controller,
+        curve: Interval(0.20, 0.40, curve: Curves.easeOut)));
+    button = Tween(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+        parent: controller, curve: Interval(0.75, 1.0, curve: Curves.easeOut)));
+    refresh = Tween(begin: 0.0, end: 2 * pi).animate(refreshController);
+    super.initState();
+    controller.forward();
+    controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.dispose();
+    refreshController.dispose();
+  }
+
   String tid;
   String todoText;
   final scaffoldKey = GlobalKey<ScaffoldState>();
@@ -29,41 +64,53 @@ class _HomePageState extends State<HomePage> {
             padding: EdgeInsets.only(right: 28.0),
             child: IconButton(
               onPressed: () {
-                todoBloc.add(DeleteAllTodoEvent());
+                todoBloc.add(ShowLoadingScreenEvent());
+                refreshController.isCompleted
+                    ? refreshController.reverse()
+                    : refreshController.forward();
               },
-              icon: Icon(
-                Icons.delete,
-                color: Colors.redAccent,
-                size: 24,
+              icon: AnimatedBuilder(
+                animation: refreshController,
+                builder: (context, child) => Transform.rotate(
+                  angle: refresh.value,
+                  child: Icon(
+                    Icons.refresh,
+                    color: Colors.white,
+                    size: 24,
+                  ),
+                ),
               ),
             ),
           ),
         ],
         elevation: 0,
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Colors.grey[900],
         automaticallyImplyLeading: false,
         title: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Text(
             'To-Do',
             style: TextStyle(
-              fontSize: 46,
+              fontSize: heading.value,
             ),
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
+      floatingActionButton: Transform.scale(
+        scale: button.value,
+        child: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            addTodoFunction(context, todoBloc);
+          },
+          backgroundColor: Colors.amber,
+          elevation: 5,
         ),
-        onPressed: () {
-          addTodoFunction(context, todoBloc);
-        },
-        backgroundColor: Colors.amber,
-        elevation: 5,
       ),
-      backgroundColor: Colors.grey[800],
+      backgroundColor: Colors.grey[900],
       body: Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
         child: TodoBlocBuilder(),
@@ -75,6 +122,8 @@ class _HomePageState extends State<HomePage> {
     return showDialog(
       context: parentContext,
       child: SimpleDialog(
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
         titlePadding: EdgeInsets.all(8.0),
         contentPadding: EdgeInsets.all(8.0),
         backgroundColor: Colors.grey[800],
@@ -125,6 +174,7 @@ class _HomePageState extends State<HomePage> {
                     ToDo todo = ToDo(todo: todoText, isCompleted: 0, tid: tid);
                     todoBloc.add(CreateTodoEvent(todo));
                     Navigator.of(context).pop();
+                    todoBloc.add(ShowLoadingScreenEvent());
                     todoText = '';
                   } else {
                     SnackBar snackBar = SnackBar(
@@ -152,7 +202,7 @@ class _HomePageState extends State<HomePage> {
                 }
               },
               buttonColor: Colors.amber,
-              buttonName: 'Add',
+              buttonName: 'Add Todo',
             ),
           ),
         ],
